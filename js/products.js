@@ -1,6 +1,6 @@
 // products.js
 
-// Reduces .html file size from 15k lines to only 25
+// Reduces .html file size from 15k lines to <40
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {

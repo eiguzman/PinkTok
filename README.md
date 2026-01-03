@@ -6,8 +6,8 @@ An interactive site of all of my current listings for sale on Facebook Marketpla
 
 ## Features
 * Sort by name or price, ascending or descending
-* Multiple keyword allows for combined brand searches
-* Punctuation leniency ("r.e.m Beauty" is simply "rem")
+* Keyword search allows for combined brand searching
+* Punctuation leniency ("r.e.m. Beauty" is simply "rem")
 * Faster dynamic filtering
 * Count of all filtered items
 * Subtle reactive color changes when hovering over searchbar or sort menu
