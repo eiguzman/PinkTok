@@ -120,13 +120,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Compute Levenshtein distance (edit distance)
+    const levenshtein = (a, b) => {
+        const matrix = Array.from({ length: a.length + 1 }, () => []);
+
+        for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+        for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= a.length; i++) {
+            for (let j = 1; j <= b.length; j++) {
+                const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j] + 1,     // deletion
+                    matrix[i][j - 1] + 1,     // insertion
+                    matrix[i - 1][j - 1] + cost // substitution
+                );
+            }
+        }
+
+        return matrix[a.length][b.length];
+    };
+
+    // Fuzzy word comparison
+    const fuzzyMatch = (word, productWord) => {
+        // Exact or substring match (fast path)
+        if (productWord.includes(word)) return true;
+
+        // Strict plural handling only
+        if (word.endsWith('s') && productWord === word.slice(0, -1)) return true;
+        if (productWord.endsWith('s') && word === productWord.slice(0, -1)) return true;
+
+        // First letter must match (eliminates most bad matches)
+        if (word[0] !== productWord[0]) return false;
+
+        // Length difference must be small
+        if (Math.abs(word.length - productWord.length) > 1) return false;
+
+        // Require strong prefix similarity
+        if (word.slice(0, 3) !== productWord.slice(0, 3)) return false;
+
+        // Now apply Levenshtein ONLY if it passes filters
+        const distance = levenshtein(word, productWord);
+
+        return distance === 1;
+    };
+
     // Function to filter products based on input
     const filterProducts = () => {
         const query = searchInput.value.trim().toLowerCase();
-        // Split into keywords based on commas
-        const rawKeywords = query.split(',').map(k => k.trim()).filter(k => k.length > 0);
-        // Normalize keywords by removing punctuation except commas
-        const keywords = rawKeywords.map(k => normalizeString(k));
+
+        // Split into comma-separated groups (OR logic)
+        const rawGroups = query.split(',').map(k => k.trim()).filter(k => k.length > 0);
 
         const productContainers = document.querySelectorAll('.container');
 
@@ -137,11 +181,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const productNameRaw = nameSpan.textContent;
             const productNameNormalized = normalizeString(productNameRaw);
 
-            // Check if any keyword matches the normalized product name
-            const matches = keywords.some(keyword => productNameNormalized.includes(keyword));
+            // Split product name into words
+            const productWords = productNameNormalized.split(/\s+/);
 
-            // Show or hide based on match or if no keywords
-            container.style.display = matches || keywords.length === 0 ? '' : 'none';
+            // Check if ANY group matches (OR logic)
+            const matches = rawGroups.some(group => {
+                const normalizedGroup = normalizeString(group);
+
+                // Split group into words (AND logic)
+                const keywords = normalizedGroup.split(/\s+/);
+
+                // Every keyword must exist somewhere in product words
+                return keywords.every(word =>
+                    productWords.some(productWord => fuzzyMatch(word, productWord))
+                );
+            });
+
+            // Show or hide
+            container.style.display = matches || rawGroups.length === 0 ? '' : 'none';
         });
 
         // After filtering, check for no results and update counter

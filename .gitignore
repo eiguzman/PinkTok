@@ -2,3 +2,4 @@
 *.ipynb
 listings.html
 data/clean/
+data/raw/your_marketplace_items.json

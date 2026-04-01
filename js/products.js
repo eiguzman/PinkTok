@@ -1,6 +1,6 @@
 // products.js
 
-// Reduces .html file size from 15k lines to <40
+// Reduces .html file size from 45k lines to <35
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     "Current Price": currentPrice,
                     "Past Price": pastPrice,
                     "Marketplace Link": link,
-                    "Image Source": imageSrc
+                    "Image Source": imageSrc,
+                    "Description": description
                 } = product;
 
                 // Create container div
@@ -37,11 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Create anchor element
                 const anchor = document.createElement('a');
                 anchor.className = 'marketplace-link';
-                anchor.href = link;
-                anchor.target = '_blank'; // Open links in new tab
+                anchor.href = "#";
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal({ name, currentPrice, pastPrice, link, imageSrc, description });
+                });
                 anchor.setAttribute('rel', 'noopener noreferrer');
-                // Alternatively, open links in same tab
-                // anchor.setAttribute('tabindex', '0');
 
                 // Create main split div
                 const splitDiv = document.createElement('div');
@@ -133,3 +135,67 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching products.json:', error);
         });
 });
+
+// Modal popup function
+function openModal(product) {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+
+    // Modal container
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+
+    // Close button
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'modal-close';
+
+    // Image
+    const img = document.createElement('img');
+    img.className = 'modal-image';
+    img.src = product.imageSrc;
+    img.alt = product.name;
+
+    // Title
+    const title = document.createElement('h2');
+    title.textContent = product.name;
+
+    // Price
+    const price = document.createElement('p');
+    price.innerHTML = `<strong>${product.currentPrice}</strong> <span class="old-price">${product.pastPrice}</span>`;
+
+    // Description
+    const desc = document.createElement('p');
+    desc.textContent = product.description;
+
+    // Redirect button
+    const button = document.createElement('a');
+    button.href = product.link;
+    button.target = '_blank';
+    button.textContent = 'View on Marketplace';
+    button.className = 'modal-button';
+
+    // Append elements
+    modal.appendChild(closeBtn);
+    modal.appendChild(img);
+    modal.appendChild(title);
+    modal.appendChild(price);
+    modal.appendChild(desc);
+    modal.appendChild(button);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // Enable background blur
+    document.body.classList.add('modal-open');
+
+    // Close behaviors
+    const closeModal = () => {
+        overlay.remove();
+        document.body.classList.remove('modal-open');
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+}
