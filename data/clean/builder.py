@@ -95,7 +95,7 @@ for product_div in product_divs:
 
     # Match description using normalized comparison
     normalized_name = normalize_text(product_name)
-    product['Description'] = description_lookup.get(normalized_name, "No description available.")
+    product['Description'] = description_lookup.get(normalized_name, "Full description available on FB Marketplace")
 
     products.append(product)
 
