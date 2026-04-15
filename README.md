@@ -20,6 +20,5 @@ An interactive site of all of my current listings for sale on Facebook Marketpla
 ### Coming Soon
 Additional features coming soon:
 * Tag filtering
-* Lazy Loading (As data increases)
 * Dark Mode
 * Price Range Filters

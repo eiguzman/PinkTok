@@ -1,5 +1,6 @@
 import json
 import unicodedata
+import re
 from bs4 import BeautifulSoup
 
 # Paths
@@ -64,6 +65,46 @@ product_divs = soup.find_all('div', class_='x9f619 x78zum5 x1r8uery xdt5ytf x1iy
 
 products = []
 
+# Reintroduce capitalization and newlines
+def improve_description(desc):
+    if not desc:
+        return ""
+
+    text = desc.strip()
+    text = re.sub(r'\s+', ' ', text)
+
+    # Handle "retails"
+    def fix_retails(match):
+        start = match.start()
+        # If not at beginning, prepend newlines
+        if start != 0:
+            return '\n\nRetails'
+        return 'Retails'
+    
+    text = re.sub(r'\bretails\b', fix_retails, text, flags=re.IGNORECASE)
+    text = re.sub(
+        r'\bpickup only\b',
+        '\n\nPickup Only',
+        text,
+        flags=re.IGNORECASE
+    )
+    text = re.sub(
+        r'\bselling\b',
+        '\n\nSelling',
+        text,
+        flags=re.IGNORECASE
+    )
+    text = re.sub(
+        r'\bsize\b',
+        '\n\nSize',
+        text,
+        flags=re.IGNORECASE
+    )
+    if text:
+        text = text[0].upper() + text[1:]
+    
+    return text.strip()
+
 for product_div in product_divs:
     product = {}
 
@@ -95,7 +136,11 @@ for product_div in product_divs:
 
     # Match description using normalized comparison
     normalized_name = normalize_text(product_name)
-    product['Description'] = description_lookup.get(normalized_name, "Full description available on FB Marketplace")
+    raw_description = description_lookup.get(
+        normalized_name,
+        "Full description available on FB Marketplace"
+    )
+    product['Description'] = improve_description(raw_description)
 
     products.append(product)
 

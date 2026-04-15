@@ -254,6 +254,10 @@ body.modal-open footer {
     animation: fadeIn 0.2s ease-in-out;
 }
 
+.modal p {
+    white-space: pre-line;
+}
+
 .modal-image {
     width: 80%;
     border-radius: 10px;
