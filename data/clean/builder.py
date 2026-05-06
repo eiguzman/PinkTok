@@ -61,7 +61,7 @@ for item in marketplace_items:
         description_lookup[normalized_title] = description
 
 # Find all product blocks
-product_divs = soup.find_all('div', class_='x9f619 x78zum5 x1r8uery xdt5ytf x1iyjqo2 xs83m0k x135b78x x11lfxj5 xexx8yu x18d9i69 xnpuxes x1cjf5ee x17dddeq')
+product_divs = soup.find_all('div', class_='x9f619 x78zum5 x1r8uery xdt5ytf x1iyjqo2 xs83m0k x135b78x x11lfxj5 xexx8yu x18d9i69 xnpuxes x1cjf5ee x17dddeq x13i5qev x1d6dtaj')
 
 products = []
 
