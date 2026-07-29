@@ -109,7 +109,7 @@ for product_div in product_divs:
     product = {}
 
     # Extract the product name
-    product_name_span = product_div.find('span', class_='x1lliihq x6ikm8r x10wlt62 x1n2onr6') 
+    product_name_span = product_div.find('span', class_='x1lliihq x6ikm8r x10wlt62 x1n2onr6 xlyipyv xuxw1ft')
     product_name = product_name_span.text.strip()
     product['Product Name'] = product_name
 
