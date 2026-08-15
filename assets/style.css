@@ -241,6 +241,8 @@ body.modal-open footer {
     justify-content: center;
     align-items: center;
     z-index: 999;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .modal {
@@ -252,6 +254,14 @@ body.modal-open footer {
     position: relative;
     text-align: center;
     animation: fadeIn 0.2s ease-in-out;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+}
+
+.modal::-webkit-scrollbar {
+    display: none;
 }
 
 .modal p {

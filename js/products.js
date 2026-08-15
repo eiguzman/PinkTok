@@ -167,6 +167,7 @@ function openModal(product) {
     // Description
     const desc = document.createElement('p');
     desc.textContent = product.description;
+    desc.style.whiteSpace = 'pre-line';
 
     // Redirect button
     const button = document.createElement('a');
